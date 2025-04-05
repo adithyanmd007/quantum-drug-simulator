@@ -2,3 +2,4 @@ streamlit
 matplotlib
 numpy
 rdkit-pypi
+playsound==1.2.2
