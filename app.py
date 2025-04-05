@@ -25,14 +25,13 @@ def play_sound(path="uploaded-sound.mp3"):
                 os.system(f'aplay "{path}"')
     threading.Thread(target=_play, daemon=True).start()
 
-# ==== MOLECULE IMAGE with transparent bg ====
+# ==== MOLECULE IMAGE for Streamlit Cloud (works with rdkit-pypi) ====
 def get_molecule_img_dark(smiles):
     mol = Chem.MolFromSmiles(smiles)
-    drawer = Draw.MolDraw2DCairo(300, 300)
-    drawer.drawOptions().setBackgroundColour((0, 0, 0, 0))
-    drawer.DrawMolecule(mol)
-    drawer.FinishDrawing()
-    return drawer.GetDrawingText()
+    img = Draw.MolToImage(mol, size=(300, 300), kekulize=True, wedgeBonds=True)
+    buf = BytesIO()
+    img.save(buf, format='PNG')
+    return buf.getvalue()
 
 # ==== SCIENTIFIC NAME ====
 def get_scientific_name(smiles):
@@ -83,7 +82,6 @@ with main_area:
     start = time.time()
 
     for i in range(frames):
-        elapsed = time.time() - start
         t = i * (duration / frames)
         times.append(t)
 
